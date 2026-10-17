@@ -1,0 +1,14 @@
+{
+  "name": "clavarium-docket",
+  "version": "0.0.2",
+  "description": "Clavarium Docket: events an AI agent or a script sees and acknowledges (MCP server + CLI). Not built yet: this version keeps the name.",
+  "license": "MIT",
+  "homepage": "https://github.com/clavarium/clavarium-docket#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/clavarium/clavarium-docket.git" },
+  "type": "module",
+  "bin": { "docket": "keep.mjs" },
+  "files": ["keep.mjs", "README.md", "LICENSE"],
+  "dependencies": {},
+  "engines": { "node": ">=22" },
+  "publishConfig": { "access": "public" }
+}
