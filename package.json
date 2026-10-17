@@ -4,11 +4,32 @@
   "description": "Clavarium Docket: events an AI agent or a script sees and acknowledges (MCP server + CLI). Not built yet: this version keeps the name.",
   "license": "MIT",
   "homepage": "https://github.com/clavarium/clavarium-docket#readme",
-  "repository": { "type": "git", "url": "git+https://github.com/clavarium/clavarium-docket.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clavarium/clavarium-docket.git"
+  },
   "type": "module",
-  "bin": { "docket": "keep.mjs" },
-  "files": ["keep.mjs", "README.md", "LICENSE"],
+  "bin": {
+    "docket": "keep.mjs"
+  },
+  "files": [
+    "keep.mjs",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {},
-  "engines": { "node": ">=22" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "npm run check:hooks && npm run check:shapes && npm run check:names && npm run check:shell",
+    "check:shapes": "node tools/check-shapes.mjs",
+    "check:names": "node tools/check-ai-names.mjs",
+    "check:shell": "node tools/check-shell.mjs",
+    "check:hooks": "node tools/check-hooks.mjs",
+    "hooks": "git config core.hooksPath hooks"
+  }
 }
