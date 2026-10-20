@@ -13,7 +13,7 @@ name: publish
 
 on:
   push:
-    branches: [main]
+    branches: [main, next]
   workflow_dispatch:
 
 permissions:
@@ -53,6 +53,15 @@ jobs:
           elif printf '%s' "$out" | grep -q E404; then echo "publish=yes" >> "$GITHUB_OUTPUT"; echo "::notice::publishing ${name}@${version}"
           else echo "::error::the registry did not answer: $out"; exit 1; fi
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+          # TWO BRANCHES: next publishes the versions to try (with a "-"), main the versions for
+          # everybody, and main is moved to a commit of next that was tried. A version for everybody
+          # on next waits for main; a version to try on main is refused. The last "publish" counts.
+          case "${GITHUB_REF_NAME}:${version}" in
+            main:*-*) echo "::error::${name}@${version} is a version to try: it goes out from next, never from main"; exit 1 ;;
+            next:*-*|main:*) : ;;
+            next:*) echo "::notice::${name}@${version} is for everybody: published from main once main is moved here"; echo "publish=no" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::published from main or next only, not from ${GITHUB_REF_NAME}"; exit 1 ;;
+          esac
       - name: Publish
         if: steps.target.outputs.publish == 'yes'
         run: |
