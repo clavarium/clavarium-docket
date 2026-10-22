@@ -30,6 +30,6 @@ business. See [docs/protocol.md](docs/protocol.md).
 
 No dependency; Node 22 or later.
 
-**Status:** first version (0.1), tried with Clavarium.
+**Status:** first version (0.1), tested here; not tried with a real agent yet.
 
 License: MIT.
