@@ -17,6 +17,19 @@ acknowledged is delivered again.
 A sibling of [Clavarium Parley](https://github.com/clavarium/clavarium-parley),
 built the same way, universal (nothing in it is specific to Clavarium).
 
-**Status: not built yet.** The npm package only keeps the name.
+A worker may also set itself reminders, which come as events when due:
+
+    docket remind --at "2026-10-23 09:00" "call the client back"
+    docket remind --in 2h "check the build"
+    docket remind --cron "0 9 * * 1" "Monday review"
+
+The application's side (`clavarium-docket/host`) posts events, turns the
+reminders that came due into events (`tick`), and is told what the worker
+did. When to tell the worker, and how often again, is the application's
+business. See [docs/protocol.md](docs/protocol.md).
+
+No dependency; Node 22 or later.
+
+**Status: first version, 0.1.
 
 License: MIT.

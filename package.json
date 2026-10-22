@@ -1,7 +1,7 @@
 {
   "name": "clavarium-docket",
-  "version": "0.0.2",
-  "description": "Clavarium Docket: events an AI agent or a script sees and acknowledges (MCP server + CLI). Not built yet: this version keeps the name.",
+  "version": "0.1.0-next.1",
+  "description": "Clavarium Docket: events an AI agent or a script sees and acknowledges, and reminders it sets itself (a command and an MCP server, and a library for the application). No dependency.",
   "license": "MIT",
   "homepage": "https://github.com/clavarium/clavarium-docket#readme",
   "repository": {
@@ -10,10 +10,14 @@
   },
   "type": "module",
   "bin": {
-    "docket": "keep.mjs"
+    "docket": "bin/docket.mjs",
+    "docket-mcp": "server/docket.mjs"
   },
   "files": [
-    "keep.mjs",
+    "bin/",
+    "server/",
+    "host/",
+    "docs/",
     "README.md",
     "LICENSE"
   ],
@@ -25,11 +29,17 @@
     "access": "public"
   },
   "scripts": {
-    "check": "npm run check:hooks && npm run check:shapes && npm run check:names && npm run check:shell",
+    "check": "npm run check:hooks && npm run check:shapes && npm run check:names && npm run check:shell && npm test",
     "check:shapes": "node tools/check-shapes.mjs",
     "check:names": "node tools/check-ai-names.mjs",
     "check:shell": "node tools/check-shell.mjs",
     "check:hooks": "node tools/check-hooks.mjs",
-    "hooks": "git config core.hooksPath hooks"
+    "hooks": "git config core.hooksPath hooks",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "exports": {
+    "./host": "./host/docket-host.mjs",
+    "./server": "./server/docket.mjs",
+    "./time": "./server/time.mjs"
   }
 }
