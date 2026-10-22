@@ -1,7 +1,6 @@
 # publish.yml -- npm, with no stored token (trusted publishing, OIDC).
 #
-# Today it publishes this repository root: Clavarium Docket (today a version that only keeps the name)
-# and, once built, the tool itself.
+# It publishes this repository root: Clavarium Docket.
 # On every push to main it reads the declared
 # version and asks the registry whether it is online already; only a version
 # that is not online is published. A version with a "-" goes out under "next".
@@ -40,8 +39,11 @@ jobs:
           at_least() { [ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -n 1)" = "$2" ]; }
           v="$(npm -v)"; at_least "$v" 11.5.1 || npm install -g npm@11
           npm -v
-      - name: The package says what it is, and runs nothing
-        run: node keep.mjs 2>&1 | grep -q 'github.com/clavarium/clavarium-docket'
+      - name: The command says the version of the package, and the tests pass
+        run: |
+          set -eu
+          [ "$(node bin/docket.mjs --version)" = "$(node -p "require('./package.json').version")" ]
+          npm test
       - name: Is this version online already?
         id: target
         run: |
