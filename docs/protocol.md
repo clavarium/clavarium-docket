@@ -12,8 +12,9 @@ a library for the application that posts events.
 | `acks.jsonl` | the worker | what it did of each event: done, or failed and why |
 | `plans.jsonl` | the worker | the reminders it set itself, and those it took back |
 | `plans-off.jsonl` | the application | the reminders the person took back |
+| `zone` | the application | the person's time zone, one IANA name (optional) |
 
-Every file only grows: nothing is edited, nothing is deleted. Each has one
+Every `.jsonl` file only grows: nothing is edited, nothing is deleted. Each has one
 writer. There is no address, no port and no key: whoever can read and write
 the folder is a side.
 
@@ -60,8 +61,9 @@ command: 0 done, 1 refused, 2 no folder, 64 not understood.
 
 ## Time
 
-A folder's time zone is `$DOCKET_TZ` (an IANA name, `Europe/Paris`), else the
-machine's. It is written into each plan, so that a cron line keeps meaning
+A folder's time zone is `$DOCKET_TZ` (an IANA name, `Europe/Paris`), else
+the one the application wrote in its `zone` file (`zone(tz)`: the person's,
+since a machine often runs in UTC), else the machine's. It is written into each plan, so that a cron line keeps meaning
 what it meant where it was set.
 
 ## Reminders become events
@@ -81,6 +83,7 @@ was due.
 | `read()` | `events` (each with `state`: `waiting`, `done` or `failed`, and its `ack`), `plans` (each with `next`, or `off`), `waiting` (how many) |
 | `tick(now?)` | the events it posted |
 | `cancel(plan)` | the plan taken back, by the person |
+| `zone(tz)` | the folder's time zone written |
 | `listen({every})` | events of its own: `acked` (`{event, ack}`), `planned` (`{plan}`), `cancelled` (`{plan}`) |
 
 `WAKE` is one line the application may type to a worker that waits at a

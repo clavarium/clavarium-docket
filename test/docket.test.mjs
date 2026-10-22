@@ -149,3 +149,14 @@ test('the same verbs as MCP tools', async (t) => {
     assert.match((await ask(6, 'tools/call', { name: 'remind', arguments: { in: '1h', text: 'later' } })).result.content[0].text, /^Set \[/);
     assert.equal(app.read().plans.length, 1);
 });
+
+test('the application writes the person\'s time zone; $DOCKET_TZ still comes first', (t) => {
+    const dir = join(folder(t), '.docket'); mkdirSync(dir);
+    const app = new Docket(dir, { now: () => T0 });
+    assert.throws(() => app.zone('Mars/Olympus'), /time zone/);
+    app.zone('America/New_York');
+    const say = (env) => run(['remind', '--at', '2026-10-23 09:00', 'x'], { env: { DOCKET_DIR: '', ...env }, cwd: join(dir, '..'), now: () => T0 }).out;
+    assert.match(say({ DOCKET_TZ: '' }), /2026-10-23 09:00 \(America\/New_York\)/);
+    assert.equal(new Date(app.read().plans.at(-1).due).toISOString(), '2026-10-23T13:00:00.000Z');
+    assert.match(say({ DOCKET_TZ: 'Europe/Paris' }), /\(Europe\/Paris\)/);
+});

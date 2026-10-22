@@ -1,11 +1,21 @@
+import { lstatSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 /* TIME, for reminders: a wall-clock time in a time zone, a cron line, and when
  * it is next due. No dependency: the time zones are the platform's (Intl).
  */
 
-/* The time zone a folder works in: $DOCKET_TZ, else the machine's. */
-export function zoneOf(env = process.env) {
+/* The time zone a folder works in: $DOCKET_TZ, else what the application wrote in its `zone` file
+   (the person's: a machine often runs in UTC), else the machine's. */
+export function zoneOf(env = process.env, dir) {
     const given = String(env.DOCKET_TZ ?? '').trim();
     if (given && isZone(given)) return given;
+    if (dir) {
+        try {
+            const file = join(dir, 'zone');
+            if (lstatSync(file).isFile() && lstatSync(file).size <= 64) { const written = readFileSync(file, 'utf8').trim(); if (isZone(written)) return written; }
+        } catch { /* none written */ }
+    }
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch { return 'UTC'; }
 }
 export function isZone(tz) { try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); return /^[A-Za-z0-9_+\-/]{1,64}$/.test(tz); } catch { return false; } }

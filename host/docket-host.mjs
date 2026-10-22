@@ -14,10 +14,11 @@
  * WHAT IS READ HERE WAS WRITTEN BY A WORKER: its notes and its reminders are
  * text chosen by a program, bounded and cleaned, handed over as text.
  */
-import { appendFileSync, mkdirSync, statSync, lstatSync } from 'node:fs';
+import { appendFileSync, mkdirSync, statSync, lstatSync, writeFileSync, renameSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { state, tick, oneLine, TEXT_MAX, DATA_MAX, WAKE, VERSION, FOLDER } from '../server/docket.mjs';
+import { isZone } from '../server/time.mjs';
 
 export { WAKE, VERSION, FOLDER };
 
@@ -45,6 +46,14 @@ export class Docket {
 
     /* The reminders that came due, posted as events: once each time each is due. */
     tick(now = this.#now()) { return tick(this.#dir, { now }); }
+
+    /* The person's time zone (an IANA name), written for the worker: the times it gives are read in it. */
+    zone(tz) {
+        if (!isZone(tz)) throw new RangeError('Not a time zone.');
+        mkdirSync(this.#dir, { recursive: true });
+        writeFileSync(join(this.#dir, 'zone.new'), `${tz}\n`);
+        renameSync(join(this.#dir, 'zone.new'), join(this.#dir, 'zone'));
+    }
 
     /* The person takes a reminder back. */
     cancel(plan) {

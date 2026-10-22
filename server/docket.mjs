@@ -25,7 +25,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { zoneOf, isZone, parseWhen, parseIn, parseCron, nextCron, lastCron, wall } from './time.mjs';
 
-export const VERSION = '0.1.0-next.1';
+export const VERSION = '0.1.0-next.2';
 export const FOLDER = '.docket';
 export const TEXT_MAX = 500;
 export const NOTE_MAX = 1000;
@@ -115,7 +115,7 @@ export function verbs(dir, { env = process.env, now = () => Date.now() } = {}) {
             if (waiting.length === 0) said.push('Nothing waits.');
             else {
                 said.push(`Waiting (${waiting.length}), oldest first; say what you did of each: docket done ID, or docket failed ID "why".`);
-                const tz = zoneOf(env);
+                const tz = zoneOf(env, dir);
                 const when = (e) => (Number.isFinite(Date.parse(e.at)) ? stamp(Date.parse(e.at), tz).replace(/ \(.*\)$/, '') : '?');
                 for (const e of waiting.slice(0, LISTED_MAX)) said.push(`  [${e.id.slice(0, ID_SHOWN)}] ${when(e)} ${e.from}/${e.kind}${e.late ? ' (late)' : ''}: ${e.text}${e.data ? `\n      data: ${JSON.stringify(e.data).slice(0, 500)}` : ''}`);
                 if (waiting.length > LISTED_MAX) said.push(`  ... and ${waiting.length - LISTED_MAX} more`);
@@ -140,7 +140,7 @@ export function verbs(dir, { env = process.env, now = () => Date.now() } = {}) {
             if (given !== 1) throw new Error('give one of: --at "2026-10-23 09:00", --in 2h, --cron "0 9 * * 1"');
             const s = state(dir, { now: now() });
             if (s.plans.filter((p) => !p.off && p.next !== null).length >= PLANS_MAX) throw new Error(`${PLANS_MAX} reminders at most: take one back first`);
-            const tz = zoneOf(env);
+            const tz = zoneOf(env, dir);
             if (cron) {
                 const c = parseCron(cron);
                 if (!c) throw new Error('a cron line is five fields: minute hour day month weekday ("0 9 * * 1": Mondays at 9:00)');
