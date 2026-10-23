@@ -1,6 +1,6 @@
 {
   "name": "clavarium-docket",
-  "version": "0.1.0-next.2",
+  "version": "0.1.0",
   "description": "Clavarium Docket: events an AI agent or a script sees and acknowledges, and reminders it sets itself (a command and an MCP server, and a library for the application). No dependency.",
   "license": "MIT",
   "homepage": "https://github.com/clavarium/clavarium-docket#readme",
