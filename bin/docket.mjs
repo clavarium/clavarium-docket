@@ -22,6 +22,7 @@ export const HELP = `docket: the events an application posted for you, and what 
 
 ID: whole, or its first 8 characters. Times are in $DOCKET_TZ, else the machine's time zone.
 An event waits until you say done or failed: one never acknowledged is given to you again.
+Keep reminder texts and done notes short (a few words): the person sees them.
 The folder used is --dir FOLDER, else $DOCKET_DIR, else the nearest ${FOLDER} folder from here up.
 docket ${VERSION}`;
 

@@ -25,7 +25,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { zoneOf, isZone, parseWhen, parseIn, parseCron, nextCron, lastCron, wall } from './time.mjs';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1-next.1';
 export const FOLDER = '.docket';
 export const TEXT_MAX = 500;
 export const NOTE_MAX = 1000;
@@ -198,9 +198,9 @@ export function tick(dir, { now = Date.now() } = {}) {
 /* ---- MCP ---- */
 export const TOOLS = [
     { name: 'list', description: 'What waits for you, oldest first, each with its id; then the reminders you set. Say what you did of each event with done or failed.', inputSchema: { type: 'object', properties: {} } },
-    { name: 'done', description: 'Say an event is handled.', inputSchema: { type: 'object', properties: { id: { type: 'string', description: 'the id, or its first 8 characters' }, note: { type: 'string' } }, required: ['id'] } },
+    { name: 'done', description: 'Say an event is handled. The note is shown to the person: a few words, what you did.', inputSchema: { type: 'object', properties: { id: { type: 'string', description: 'the id, or its first 8 characters' }, note: { type: 'string' } }, required: ['id'] } },
     { name: 'failed', description: 'Say an event could not be handled, and why: the person is told.', inputSchema: { type: 'object', properties: { id: { type: 'string' }, why: { type: 'string' } }, required: ['id', 'why'] } },
-    { name: 'remind', description: 'Set yourself a reminder: at a time ("2026-10-23 09:00"), in a while ("2h", "3d"), or by a cron line ("0 9 * * 1"). It comes as an event when due.', inputSchema: { type: 'object', properties: { at: { type: 'string' }, in: { type: 'string' }, cron: { type: 'string' }, text: { type: 'string' } }, required: ['text'] } },
+    { name: 'remind', description: 'Set yourself a reminder: at a time ("2026-10-23 09:00"), in a while ("2h", "3d"), or by a cron line ("0 9 * * 1"). It comes as an event when due. Keep its text short (a title, a few words): it is shown to the person each time.', inputSchema: { type: 'object', properties: { at: { type: 'string' }, in: { type: 'string' }, cron: { type: 'string' }, text: { type: 'string' } }, required: ['text'] } },
     { name: 'cancel', description: 'Take back a reminder you set.', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
 ];
 export function serve(dir, { input = process.stdin, output = process.stdout, env = process.env } = {}) {
