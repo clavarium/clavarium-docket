@@ -25,7 +25,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { zoneOf, isZone, parseWhen, parseIn, parseCron, nextCron, lastCron, wall } from './time.mjs';
 
-export const VERSION = '0.1.1-next.1';
+export const VERSION = '0.1.1';
 export const FOLDER = '.docket';
 export const TEXT_MAX = 500;
 export const NOTE_MAX = 1000;
