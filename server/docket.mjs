@@ -25,7 +25,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { zoneOf, isZone, parseWhen, parseIn, parseCron, nextCron, lastCron, wall } from './time.mjs';
 
-export const VERSION = '0.1.2-next.1';
+export const VERSION = '0.1.2-next.2';
 export const FOLDER = '.docket';
 export const TEXT_MAX = 500;
 export const NOTE_MAX = 1000;
@@ -235,6 +235,6 @@ if (main) {
     if (!dir) { process.stderr.write(`No ${FOLDER} folder: give --dir FOLDER.\n`); process.exit(2); }
     /* Under a relay (02-11): a new version installed is taken up between two requests, the session never
        restarted. --child: the server itself, as the relay starts it. */
-    if (process.argv.includes('--child') || process.env.DOCKET_NO_RELAY === '1') serve(dir);
+    if (process.argv.includes('--child') || process.env.DOCKET_NO_RELAY === '1' || process.env.MCP_RELAYED === '1') serve(dir);
     else void import('./relay.mjs').then(({ relay }) => relay({ args: [HERE, ...process.argv.slice(2), '--child'], packageJson: join(dirname(HERE), '..', 'package.json') })).catch(() => serve(dir));
 }
